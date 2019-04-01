@@ -1,0 +1,59 @@
+<html>
+    <head>
+
+    <style>
+        div#log{
+            width:800px;
+            height: 300px;
+            margin: 0 auto;
+            border: 5px solid black;
+            border-radius: 7px;
+        }
+        div#sendCtrls{
+            width:235px;
+            margin:30px auto;
+        }     
+   </style>
+    </head>
+<body>
+     <div id="log"></div>
+    <div id="sendCtrls">
+    <input type="text" placeholder="Your message" id="text">
+    <button id="button">send</button>
+        </div>
+          <!-- <script src="/static/script.js"></script> -->
+    <script>
+     var sock = new WebSocket("ws://localhost:5001");
+    var button = document.getElementById("button");
+    var log = document.getElementById('log');
+                var message = {  
+    data:"",
+    to:"", 
+  type:"",
+  from:localStorage.getItem('userName'),
+};
+sock.onopen = function(event){
+	alert("Socket connected successfuly");
+    message.data =  localStorage.getItem("userName");
+        message.to = "sever";
+            message.type="userName";
+   sock.send(JSON.stringify(message));
+    button.onclick = function()
+    {
+    message.data =  document.getElementById("text").value;
+        message.to ="mhd";
+            message.type="txt";
+       // var message = document.getElementById("text").value;
+        sock.send(JSON.stringify(message));
+        log.innerHTML +="You: "+ message.data+"<br>";  
+    }
+
+	
+};
+sock.onmessage = function(event){
+	log.innerHTML +=event.data+"<br>";
+}
+    </script>
+
+</body>
+</html>
